@@ -1,0 +1,32 @@
+<textarea
+          name="Text"
+          id="textElement"
+          matInput
+          cdkTextareaAutosize></textarea>
+<textarea
+          name="Code"
+          id="codeElement"
+          class="morse-code"
+          matInput
+          cdkTextareaAutosize></textarea>
+<textarea
+          name="Code Binary"
+          id="binaryElement"
+          matInput
+          cdkTextareaAutosize
+          readonly></textarea>
+
+<br>
+<input type="range" min="0" max="24000" id="synthFrequencyElement">
+<div id="synthFrequencyElementValue">
+</div>
+<input type="range" min="1" max="8" id="synthSpeedElement">
+<div id="synthSpeedElementValue"></div>
+
+<button id="listenButton">
+    Listen
+    <span class="material-icons md-18">hearing</span>
+</button>
+
+<br>
+<!-- <span class="material-icons">settings</span> -->

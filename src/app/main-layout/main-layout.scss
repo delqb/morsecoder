@@ -1,0 +1,15 @@
+.main-layout-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    display: flex;
+    flex: 1;
+}
+
+.content {
+    padding: 12vh 24vh;
+    flex: 1;
+}
