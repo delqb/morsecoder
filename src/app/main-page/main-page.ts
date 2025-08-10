@@ -1,13 +1,19 @@
 import { AfterViewInit, Component, computed, input } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
-
+import { MatButtonModule, MatFabButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MorseEngine, Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
 import { MMorseAudioComposition, MMorseCode, MMorseEngine, MMorseSynthesizer } from 'morseengine/internal'
 const morseEngine = Morse.engine;
 
 @Component({
   selector: 'app-main-page',
-  imports: [TextFieldModule],
+  imports: [
+    TextFieldModule,
+    MatButtonModule,
+    MatFabButton,
+    MatIconModule,
+  ],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss'
 })
@@ -50,10 +56,10 @@ function initViewController(
 
   function updateSynthesizerParameterView() {
     frequencyElement.value = "" + morseSynthesizer.frequency;
-    frequencyElementValue.innerText = frequencyElement.value + "Hz";
+    frequencyElementValue.innerText = `Pitch (frequency): ${frequencyElement.value} Hz`;
 
     speedElement.value = "" + morseSynthesizer.speed;
-    speedElementValue.innerText = speedElement.value + "x";
+    speedElementValue.innerText = `Speed: ${speedElement.value}` + "x";
   }
 
   textElement.oninput = () => {

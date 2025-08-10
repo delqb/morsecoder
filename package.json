@@ -20,7 +20,6 @@
   },
   "private": true,
   "dependencies": {
-    "morseengine": "file:../morse-engine",
     "@angular/cdk": "^20.1.4",
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
@@ -29,6 +28,8 @@
     "@angular/material": "^20.1.4",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "material": "^0.9.24",
+    "morseengine": "file:../morse-engine",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
