@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, computed, input } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
 
 import { MorseEngine, Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
@@ -13,6 +13,9 @@ const morseEngine = Morse.engine;
   styleUrl: './main-page.scss'
 })
 export class MainPage implements AfterViewInit {
+  readonly title = input("Morse Coder");
+  readonly titleMorseCode = computed(() => Morse.engine.textToMorseString(this.title()))
+
   ngAfterViewInit(): void {
     initViewController(morseEngine);
   }
@@ -35,7 +38,7 @@ function initViewController(
   function updateMorseCode(latest: MorseCode) {
     latestMorseCode = latest;
 
-    binaryElement.value = latestMorseCode.getElements().map(element => new Array(element.getUnitDuration()).fill(+!element.isSpace() + "")).flat().join("");
+    binaryElement.value = latestMorseCode.toBinary().join("");
     console.log(binaryElement.value.replaceAll("", ","))
   }
 
