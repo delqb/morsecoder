@@ -1,5 +1,7 @@
 {
     "name": "morsecoder",
     "compatibility_date": "2025-08-08",
-    "directory": "./dist/browser"
+    "assets": {
+        "directory": "./dist/browser"
+    }
 }
