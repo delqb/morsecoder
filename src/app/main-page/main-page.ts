@@ -2,8 +2,7 @@ import { AfterViewInit, Component, computed, input } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
 
 import { MorseEngine, Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
-import { MMorseCode, MMorseEngine, MMorseSynthesizer, MMorseAudioComposition } from '../../../../morse-engine/src/morse_engine_internal';
-
+import { MMorseAudioComposition, MMorseCode, MMorseEngine, MMorseSynthesizer } from 'morseengine/internal'
 const morseEngine = Morse.engine;
 
 @Component({

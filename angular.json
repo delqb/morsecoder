@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "morse-engine": {
+    "morsecoder": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -58,10 +58,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "morse-engine:build:production"
+              "buildTarget": "morsecoder:build:production"
             },
             "development": {
-              "buildTarget": "morse-engine:build:development"
+              "buildTarget": "morsecoder:build:development"
             }
           },
           "defaultConfiguration": "development"
