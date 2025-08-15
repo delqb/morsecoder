@@ -1,9 +1,16 @@
-import { AfterViewInit, Component, computed, input } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, Injector, input, runInInjectionContext, signal, viewChild } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule, MatFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 import { MorseEngine, Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
 import { MMorseAudioComposition, MMorseCode, MMorseEngine, MMorseSynthesizer } from 'morseengine/internal'
+import { SliderControlComponent } from '../components/slider-control-component/slider-control-component';
+import { MatDivider } from '@angular/material/divider';
 const morseEngine = Morse.engine;
 
 @Component({
@@ -13,30 +20,51 @@ const morseEngine = Morse.engine;
     MatButtonModule,
     MatFabButton,
     MatIconModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatSliderModule,
+    SliderControlComponent
   ],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss'
 })
 export class MainPage implements AfterViewInit {
+  private readonly injector = inject(Injector);
+
   readonly title = input("Morse Coder");
   readonly titleMorseCode = computed(() => Morse.engine.textToMorseString(this.title()))
 
+  readonly pitchControl = viewChild<SliderControlComponent>("pitchControl");
+  readonly speedControl = viewChild<SliderControlComponent>("speedControl");
+
   ngAfterViewInit(): void {
-    initViewController(morseEngine);
+
+    const synth = initViewController(
+      morseEngine
+    );
+
+    runInInjectionContext(this.injector, () => {
+      effect(() => {
+        synth.speed = this.speedControl()!.value();
+      });
+
+      effect(() => {
+        synth.frequency = this.pitchControl()!.value();
+      });
+    });
   }
 }
 
+
 function initViewController(
   morseEngine: MorseEngine
-) {
+): MMorseSynthesizer {
   let textElement = document.getElementById("textElement")! as HTMLTextAreaElement;
   let codeElement = document.getElementById("codeElement")! as HTMLTextAreaElement;
   let binaryElement = document.getElementById("binaryElement")! as HTMLTextAreaElement;
   let listenButton = document.getElementById("listenButton")! as HTMLButtonElement;
-  let frequencyElement = document.getElementById("synthFrequencyElement")! as HTMLInputElement;
-  let frequencyElementValue = document.getElementById("synthFrequencyElementValue")! as HTMLDivElement;
-  let speedElement = document.getElementById("synthSpeedElement")! as HTMLInputElement;
-  let speedElementValue = document.getElementById("synthSpeedElementValue")! as HTMLDivElement;
 
   let latestMorseCode: MorseCode = new MMorseCode([]);
 
@@ -53,14 +81,6 @@ function initViewController(
   const morseElementDict = engineImpl.elementRegistry.getDictionary();
   const characterDictionary = engineImpl.characterCodeRegistry.getDictionary();
   const morseSynthesizer = new MMorseSynthesizer(morseElementDict);
-
-  function updateSynthesizerParameterView() {
-    frequencyElement.value = "" + morseSynthesizer.frequency;
-    frequencyElementValue.innerText = `Pitch (frequency): ${frequencyElement.value} Hz`;
-
-    speedElement.value = "" + morseSynthesizer.speed;
-    speedElementValue.innerText = `Speed: ${speedElement.value}` + "x";
-  }
 
   textElement.oninput = () => {
     textElement.value = textElement.value
@@ -87,18 +107,6 @@ function initViewController(
     textElement.value = morseEngine.morseObjectToText(latestMorseCode);
   }
 
-  frequencyElement.oninput = () => {
-    morseSynthesizer.frequency = parseFloat(frequencyElement.value);
-    updateSynthesizerParameterView();
-  }
-
-  speedElement.oninput = () => {
-    morseSynthesizer.speed = parseFloat(speedElement.value);
-    updateSynthesizerParameterView();
-  }
-
-  updateSynthesizerParameterView();
-
   listenButton.onclick = () => {
     listenButton.disabled = true;
 
@@ -106,4 +114,6 @@ function initViewController(
     ac.start();
     setTimeout(() => listenButton.disabled = false, (ac as MMorseAudioComposition).params.compositionDurationSeconds * 1000);
   }
+
+  return morseSynthesizer;
 }

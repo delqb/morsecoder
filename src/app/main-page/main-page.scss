@@ -48,9 +48,25 @@ textarea {
 }
 
 .label {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 button {
     padding: 1rem;
+}
+
+.field {
+    width: 100%;
+}
+
+.control-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.conversion-container {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1
 }

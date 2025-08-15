@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+
+.slider-control-container {
+    width: 100%;
+}
+
+.slider-control-container {
+    display: flex;
+    align-items: center;
+    gap: 5%;
+    justify-content: center;
+}
+
+.slider-control {
+    flex: 1;
+}
+
+mat-slider {
+    @include mat.slider-overrides((value-indicator-padding: 0.2rem,
+            value-indicator-width: 2rem,
+            value-indicator-height: 2rem,
+        ));
+}

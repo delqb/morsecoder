@@ -1,0 +1,30 @@
+<div class="slider-control-container">
+    <label class="slider-control-name-label">{{name()}}</label>
+    <mat-slider
+                [min]="min()"
+                [max]="max()"
+                [step]="step()"
+                [showTickMarks]="true"
+                [discrete]="true"
+                [displayWith]="formatLabel"
+                class="slider-control">
+        <input
+               matSliderThumb
+               [(ngModel)]="value"
+               #slider>
+    </mat-slider>
+    <mat-form-field
+                    subscriptSizing="dynamic"
+                    class="slider-control-value-field"
+                    [style.width.rem]="getValueFieldWidth()">
+
+        <input
+               matInput
+               type="number"
+               [(ngModel)]="value"
+               [min]="slider.min"
+               [max]="slider.max"
+               maxlength="{{slider.max}}"
+               class="slider-control-value-field-input">
+    </mat-form-field>
+</div>
