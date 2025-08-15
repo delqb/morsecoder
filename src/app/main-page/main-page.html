@@ -12,99 +12,154 @@
         </div>
     </div>
 
-    <div class="conversion-container">
-        <mat-form-field
-                        class="field">
-            <div class="field">
-                <span class="label">Text</span>
-                <textarea
-                          placeholder="type something"
-                          name="Text"
-                          id="textElement"
-                          matInput
-                          cdkTextareaAutosize></textarea>
+    <mat-card class="full flex-container">
+        <mat-card-header>
+            <mat-icon class="material-symbols-outlined" aria-hidden="true">swap_horiz</mat-icon>
+
+            <mat-card-title>
+                <span class="label">Editor</span>
+            </mat-card-title>
+        </mat-card-header>
+
+
+        <mat-card-content>
+
+            <div class="editor">
+
+                <mat-card appearance="outlined" class="field">
+                    <mat-card-header>
+                        <mat-card-title>
+                            <span class="label">Text</span>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="wrapper">
+
+                        <mat-form-field
+                                        class="full no-border">
+                            <textarea
+                                      class="full-height"
+                                      placeholder="type something"
+                                      name="Text"
+                                      id="textElement"
+                                      matInput
+                                      cdkTextareaAutosize
+                                      cdkAutosizeMinRows="4"
+                                      (input)="onTextInput($event)"
+                                      [value]="text()"></textarea>
+                        </mat-form-field>
+
+                    </mat-card-content>
+                </mat-card>
+
+
+                <mat-card appearance="outlined" class="full">
+                    <mat-card-content class="wrapper flex-container">
+
+                        <mat-tab-group
+                                       class="field"
+                                       preserveContent="true">
+                            <mat-tab label="Morse code">
+                                <mat-form-field
+                                                class="full morse-code"
+                                                subscriptSizing="dynamic">
+                                    <!-- <span class="label">Morse code</span> -->
+                                    <textarea
+                                              name="Code"
+                                              id="codeElement"
+                                              class="full-height morse-code morse-code-field"
+                                              matInput
+                                              cdkTextareaAutosize
+                                              cdkAutosizeMinRows="4"
+                                              (input)="onCodeInput($event)"
+                                              [(ngModel)]="morseCodeString"></textarea>
+                                </mat-form-field>
+                            </mat-tab>
+
+                            <mat-tab label="Binary">
+                                <mat-form-field
+                                                class="full"
+                                                subscriptSizing="dynamic">
+                                    <!--
+                    <span class="label">Morse code binary</span> -->
+                                    <textarea
+                                              class="full-height"
+                                              name="Code Binary"
+                                              id="binaryElement"
+                                              matInput
+                                              cdkTextareaAutosize
+                                              cdkAutosizeMinRows="4"
+                                              readonly
+                                              [(ngModel)]="morseBinaryString"></textarea>
+                                </mat-form-field>
+                            </mat-tab>
+                        </mat-tab-group>
+
+                        <button
+                                class="faib self-center"
+                                matIconButton
+                                id="listenButton"
+                                aria-label="play-morse-code"
+                                (click)="onPlayButtonClick()"
+                                [disabled]="isPlaying()"
+                                #playButton>
+                            <mat-icon class="material-symbols-outlined" aria-hidden="true">
+                                volume_up
+                            </mat-icon>
+                        </button>
+
+                    </mat-card-content>
+                </mat-card>
+
+
             </div>
-        </mat-form-field>
 
-        <mat-form-field
-                        class="field morse-code">
-            <span class="label">Morse code</span>
-            <textarea
-                      name="Code"
-                      id="codeElement"
-                      class="morse-code morse-code-field"
-                      matInput
-                      cdkTextareaAutosize></textarea>
+            <br>
+
+            <div class="settings">
+
+                <mat-card appearance="outlined" class="full">
+
+                    <mat-card-header>
+                        <mat-card-title>
+                            Settings
+                        </mat-card-title>
+                    </mat-card-header>
+
+                    <br>
+
+                    <mat-card-content class="control-container">
+
+                        <mat-card>
+                            <mat-card-content>
+                                <app-slider-control
+                                                    [min]="200"
+                                                    [max]="18000"
+                                                    [step]="100"
+                                                    [initialValue]="1200"
+                                                    [name]="'Pitch'"
+                                                    [(value)]="pitch"
+                                                    #pitchControl />
+                            </mat-card-content>
+                        </mat-card>
+
+                        <mat-card>
+                            <mat-card-content>
+                                <app-slider-control
+                                                    [min]="1"
+                                                    [max]="10"
+                                                    [step]="0.5"
+                                                    [initialValue]="3"
+                                                    [name]="'Speed'"
+                                                    [(value)]="speed"
+                                                    #speedControl />
+                            </mat-card-content>
+                        </mat-card>
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
 
 
-
-
-            <button
-                    class="faib"
-                    matIconButton
-                    id="listenButton"
-                    aria-label="play-morse-code"
-                    (click)="onPlayButtonClick()"
-                    #playButton>
-                <mat-icon class="material-symbols-outlined" aria-hidden="true">
-                    volume_up
-                </mat-icon>
-            </button>
-
-
-        </mat-form-field>
-
-    </div>
-
-    <mat-form-field class="field">
-        <span class="label">Morse code binary</span>
-        <textarea
-                  name="Code Binary"
-                  id="binaryElement"
-                  matInput
-                  cdkTextareaAutosize
-                  readonly></textarea>
-    </mat-form-field>
-
-    <br>
-
+        </mat-card-content>
+    </mat-card>
 </div>
-
-<mat-card appearance="outlined">
-
-    <mat-card-header>
-        <mat-card-title>
-            Settings
-        </mat-card-title>
-    </mat-card-header>
-
-    <br>
-
-    <mat-card-content class="control-container">
-
-        <mat-card>
-            <mat-card-content>
-                <app-slider-control
-                                    [min]="200"
-                                    [max]="18000"
-                                    [step]="100"
-                                    [initialValue]="1200"
-                                    [name]="'Pitch'"
-                                    #pitchControl />
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card>
-            <mat-card-content>
-                <app-slider-control
-                                    [min]="1"
-                                    [max]="10"
-                                    [step]="0.5"
-                                    [initialValue]="3"
-                                    [name]="'Speed'"
-                                    #speedControl />
-            </mat-card-content>
-        </mat-card>
-
-    </mat-card-content>
-</mat-card>

@@ -1,23 +1,23 @@
-import { AfterViewInit, Component, computed, effect, inject, Injector, input, runInInjectionContext, signal, viewChild, WritableSignal } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { MatButtonModule, MatFabButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MorseEngine, Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
+import { Morse, MorseCode, StandardMorseCodeCharacterDictionary } from 'morseengine'
 import { MMorseAudioComposition, MMorseCode, MMorseEngine, MMorseSynthesizer } from 'morseengine/internal'
 import { SliderControlComponent } from '../components/slider-control-component/slider-control-component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Component, input, computed, model, signal, effect } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-main-page',
   imports: [
     TextFieldModule,
     MatButtonModule,
-    // MatFabButton,
     MatIconModule,
     MatCardModule,
     MatFormFieldModule,
@@ -25,109 +25,99 @@ import { MatTabsModule } from '@angular/material/tabs';
     FormsModule,
     MatSliderModule,
     SliderControlComponent,
-    MatTabsModule
+    MatTabsModule,
+    MatDivider
   ],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss'
 })
-export class MainPage implements AfterViewInit {
-  private readonly injector = inject(Injector);
+export class MainPage {
   private readonly morseEngine = Morse.engine;
-
-  readonly title = input("Morse Coder");
-  readonly titleMorseCode = computed(() => Morse.engine.textToMorseString(this.title()))
-
-  readonly morseCode = signal<MorseCode>(new MMorseCode([]));
-
-  readonly playButton = viewChild<HTMLButtonElement>("playButton");
-  readonly pitchControl = viewChild<SliderControlComponent>("pitchControl");
-  readonly speedControl = viewChild<SliderControlComponent>("speedControl");
-
-  private synth: MMorseSynthesizer | undefined = undefined;
-
-  constructor() {
-
-  }
-
-  onPlayButtonClick() {
-    if (!this.synth)
-      return;
-
-    const button = this.playButton()!;
-
-    button.disabled = true;
-
-    let ac = this.synth.synthesize(this.morseCode());
-    ac.start();
-    setTimeout(() => button.disabled = false, (ac as MMorseAudioComposition).params.compositionDurationSeconds * 1000);
-  }
-
-  ngAfterViewInit(): void {
-    this.synth = initViewController(
-      this.morseEngine,
-      this.morseCode
-    );
-
-    runInInjectionContext(this.injector, () => {
-      effect(() => {
-        if (this.synth)
-          this.synth.speed = this.speedControl()!.value();
-      });
-
-      effect(() => {
-        if (this.synth)
-          this.synth.frequency = this.pitchControl()!.value();
-      });
-    });
-  }
-}
-
-
-function initViewController(
-  morseEngine: MorseEngine,
-  morseCodeSignal: WritableSignal<MorseCode>
-): MMorseSynthesizer {
-  let textElement = document.getElementById("textElement")! as HTMLTextAreaElement;
-  let codeElement = document.getElementById("codeElement")! as HTMLTextAreaElement;
-  let binaryElement = document.getElementById("binaryElement")! as HTMLTextAreaElement;
-
-
-  function updateMorseCode(latest: MorseCode) {
-    morseCodeSignal.set(latest);
-
-    binaryElement.value = morseCodeSignal().toBinary().join("");
-  }
 
   // Accessing internal code
   // Fix after update
-  const engineImpl = (morseEngine as MMorseEngine<StandardMorseCodeCharacterDictionary>);
-  const morseElementDict = engineImpl.elementRegistry.getDictionary();
-  const characterDictionary = engineImpl.characterCodeRegistry.getDictionary();
+  private readonly engineImpl = (this.morseEngine as MMorseEngine<StandardMorseCodeCharacterDictionary>);
+  private readonly morseElementDict = this.engineImpl.elementRegistry.getDictionary();
+  private readonly characterDictionary = this.engineImpl.characterCodeRegistry.getDictionary();
+  private readonly morseSynthesizer = new MMorseSynthesizer(this.morseElementDict);
+  //
 
-  textElement.oninput = () => {
-    textElement.value = textElement.value
-      .split("")
-      .map(char => char.toUpperCase())
-      .filter(char => Object.keys(characterDictionary).includes(char))
-      .join("");
+  readonly title = input("Morse Coder");
+  readonly titleMorseCode = computed(() => this.morseEngine.textToMorseString(this.title()));
 
-    updateMorseCode(morseEngine.textToMorseObject(textElement.value));
-    codeElement.value = morseCodeSignal().toString();
+  readonly text = model<string>("");
+  readonly morseCode = model<MorseCode>(new MMorseCode([]));
+  readonly morseCodeString = model<string>("");
+  readonly morseBinaryString = model<string>("");
+
+  readonly pitch = model<number>(0);
+  readonly speed = model<number>(0);
+  readonly isPlaying = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      this.morseSynthesizer.speed = this.speed();
+    });
+
+    effect(() => {
+      this.morseSynthesizer.frequency = this.pitch();
+    });
   }
 
-  codeElement.oninput = () => {
-    codeElement.value = codeElement.value
-      .split("")
-      .filter(sym =>
-        Object.values(morseElementDict)
-          .map(ele => ele.toString())
-          .includes(sym)
-      )
-      .join("");
+  onPlayButtonClick() {
+    this.isPlaying.set(true);
 
-    updateMorseCode(morseEngine.morseStringToMorseObject(codeElement.value))
-    textElement.value = morseEngine.morseObjectToText(morseCodeSignal());
+    let audioComposition = this.morseSynthesizer.synthesize(this.morseCode());
+    audioComposition.start();
+
+    setTimeout(
+      () => this.isPlaying.set(false),
+      (audioComposition as MMorseAudioComposition).params.compositionDurationSeconds * 1000
+    );
   }
 
-  return new MMorseSynthesizer(morseElementDict);
+  updateMorseCode(latest: MorseCode) {
+    this.morseCode.set(latest);
+    this.morseBinaryString.set(latest.toBinary().join(""));
+  }
+
+  updateMorseCodeString(newValue?: MorseCode) {
+    this.morseCodeString.set((newValue ?? this.morseCode()).toString());
+  }
+
+  updateText(newValue?: MorseCode) {
+    this.text.set(this.morseEngine.morseObjectToText((newValue ?? this.morseCode())));
+  }
+
+  onTextInput(event: Event) {
+    const target = event.target as HTMLTextAreaElement;
+    const filtered = target.value
+      .toUpperCase()
+      .split('')
+      .filter(char => Object.keys(this.characterDictionary).includes(char))
+      .join('');
+
+    target.value = filtered;
+
+    const latest = this.morseEngine.textToMorseObject(filtered);
+    this.updateMorseCode(latest);
+    this.updateMorseCodeString(latest);
+
+  }
+
+  onCodeInput(event: Event) {
+    const target = event.target as HTMLTextAreaElement;
+    const allowedSymbols = Object.values(this.morseElementDict).map(ele => ele.toString());
+
+    const filtered = target.value
+      .split('')
+      .filter(sym => allowedSymbols.includes(sym))
+      .join('');
+
+    target.value = filtered;
+
+    const latest = this.morseEngine.morseStringToMorseObject(filtered);
+    this.updateMorseCode(latest);
+    this.updateText(latest);
+  }
 }

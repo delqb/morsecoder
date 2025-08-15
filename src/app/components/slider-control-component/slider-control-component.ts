@@ -1,5 +1,5 @@
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,7 +23,7 @@ export class SliderControlComponent implements OnInit {
   readonly max = input(0);
   readonly step = input(1);
   readonly initialValue = input(0);
-  readonly value = signal(0);
+  readonly value = model(0);
 
   formatLabel(value: number): string {
     if (value >= 1000) {
