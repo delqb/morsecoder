@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+@use '../../styles' as *;
+
 textarea {
     width: 100%;
 
@@ -49,6 +52,7 @@ textarea {
 
 .label {
     font-size: 1.1rem;
+    font: $app-font-family;
 }
 
 .field {
@@ -62,6 +66,7 @@ textarea {
 }
 
 .conversion-container {
+    width: 100%;
     display: flex;
     gap: 0.5rem;
     flex: 1
@@ -73,4 +78,8 @@ textarea {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+mat-form-field.morse-code {
+    @include mat.form-field-overrides((container-text-font: MorseDD));
 }

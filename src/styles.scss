@@ -28,7 +28,7 @@ html {
     @include mat.theme((color: (primary: mat.$azure-palette,
                 tertiary: mat.$blue-palette,
             ),
-            typography: Bahnschrift,
+            typography: $app-font-family,
             density: (scale: -4),
         ));
 }

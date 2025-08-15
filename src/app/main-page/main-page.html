@@ -12,27 +12,51 @@
         </div>
     </div>
 
-    <div class="field">
-        <span class="label">Text</span>
-        <textarea
-                  name="Text"
-                  id="textElement"
-                  matInput
-                  cdkTextareaAutosize></textarea>
+    <div class="conversion-container">
+        <mat-form-field
+                        class="field">
+            <div class="field">
+                <span class="label">Text</span>
+                <textarea
+                          placeholder="type something"
+                          name="Text"
+                          id="textElement"
+                          matInput
+                          cdkTextareaAutosize></textarea>
+            </div>
+        </mat-form-field>
+
+        <mat-form-field
+                        class="field morse-code">
+            <span class="label">Morse code</span>
+            <textarea
+                      name="Code"
+                      id="codeElement"
+                      class="morse-code morse-code-field"
+                      matInput
+                      cdkTextareaAutosize></textarea>
+
+
+
+
+            <button
+                    class="faib"
+                    matIconButton
+                    id="listenButton"
+                    aria-label="play-morse-code"
+                    (click)="onPlayButtonClick()"
+                    #playButton>
+                <mat-icon class="material-symbols-outlined" aria-hidden="true">
+                    volume_up
+                </mat-icon>
+            </button>
+
+
+        </mat-form-field>
+
     </div>
 
-    <div class="field">
-        <span class="label">Morse code</span>
-        <textarea
-                  name="Code"
-                  id="codeElement"
-                  class="morse-code morse-code-field"
-                  matInput
-                  cdkTextareaAutosize></textarea>
-    </div>
-
-
-    <div class="field">
+    <mat-form-field class="field">
         <span class="label">Morse code binary</span>
         <textarea
                   name="Code Binary"
@@ -40,43 +64,11 @@
                   matInput
                   cdkTextareaAutosize
                   readonly></textarea>
-    </div>
+    </mat-form-field>
 
     <br>
 
-
-
-
-    <button
-            class="faib"
-            matIconButton
-            id="listenButton"
-            aria-label="play-morse-code">
-        <mat-icon class="material-symbols-outlined" aria-hidden="true">
-            volume_up
-        </mat-icon>
-    </button>
-
-
-
-
-
 </div>
-
-<!-- <div class="conversion-container">
-    <div>
-        <mat-form-field>
-            <mat-label>Textarea</mat-label>
-            <textarea matInput></textarea>
-        </mat-form-field>
-    </div>
-    <div>
-        <mat-form-field>
-            <mat-label>Textarea</mat-label>
-            <textarea matInput></textarea>
-        </mat-form-field>
-    </div>
-</div> -->
 
 <mat-card appearance="outlined">
 
