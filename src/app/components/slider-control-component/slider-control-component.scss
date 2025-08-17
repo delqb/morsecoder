@@ -21,3 +21,18 @@ mat-slider {
             value-indicator-height: 2rem,
         ));
 }
+
+// Sliders should shrink as much as necessary to accomodate smaller displays
+.mat-mdc-slider {
+    min-width: unset;
+}
+
+
+.slider-control-value-field-input,
+mat-form-field {
+    width: max-content;
+}
+
+::ng-deep mat-form-field .mat-mdc-form-field-infix {
+    width: auto !important;
+}
