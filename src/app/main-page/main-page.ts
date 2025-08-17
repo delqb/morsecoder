@@ -11,7 +11,6 @@ import { MMorseAudioComposition, MMorseCode, MMorseEngine, MMorseSynthesizer } f
 import { SliderControlComponent } from '../components/slider-control-component/slider-control-component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Component, input, computed, model, signal, effect } from '@angular/core';
-import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-main-page',
@@ -25,8 +24,7 @@ import { MatDivider } from '@angular/material/divider';
     FormsModule,
     MatSliderModule,
     SliderControlComponent,
-    MatTabsModule,
-    MatDivider
+    MatTabsModule
   ],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss'
