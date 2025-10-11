@@ -2,6 +2,7 @@
   "name": "morsecoder",
   "version": "0.0.0",
   "scripts": {
+    "reload-morseengine": "npm uninstall morseengine --no-save && npm install morseengine",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
