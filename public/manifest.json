@@ -2,7 +2,7 @@
     "key": "morsecoder",
     "display_name": "Morsecoder",
     "short_name": "Morsecoder",
-    "description": "",
+    "description": "An Angular application that provides features for converting Morse code from text to binary and dot/dash form, or vise versa, and the option to play it in audio form. It is powered by my Morse Engine library.",
     "start_url": "https://morsecoder.playground.delbanna.com/index.html",
     "cover_image": "https://morsecoder.playground.delbanna.com/cover.png"
 }
